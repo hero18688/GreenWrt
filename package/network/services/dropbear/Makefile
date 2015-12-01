@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dropbear
-PKG_VERSION:=2014.65
-PKG_RELEASE:=2
+PKG_VERSION:=2015.68
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:= \
 	http://matt.ucc.asn.au/dropbear/releases/ \
 	https://dropbear.nl/mirror/releases/
-PKG_MD5SUM:=1918604238817385a156840fa2c39490
+PKG_MD5SUM:=7664ac10f7cc2301c530eb80c756fc5d
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE libtomcrypt/LICENSE libtommath/LICENSE
@@ -48,7 +48,6 @@ endef
 
 define Package/dropbear/conffiles
 /etc/dropbear/dropbear_rsa_host_key
-/etc/dropbear/dropbear_dss_host_key 
 /etc/config/dropbear 
 endef
 
@@ -107,10 +106,10 @@ define Package/dropbear/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dropbearmulti $(1)/usr/sbin/dropbear
 	$(INSTALL_DIR) $(1)/usr/bin
-	ln -sf ../sbin/dropbear $(1)/usr/bin/scp
-	ln -sf ../sbin/dropbear $(1)/usr/bin/ssh
-	ln -sf ../sbin/dropbear $(1)/usr/bin/dbclient
-	ln -sf ../sbin/dropbear $(1)/usr/bin/dropbearkey
+	$(LN) ../sbin/dropbear $(1)/usr/bin/scp
+	$(LN) ../sbin/dropbear $(1)/usr/bin/ssh
+	$(LN) ../sbin/dropbear $(1)/usr/bin/dbclient
+	$(LN) ../sbin/dropbear $(1)/usr/bin/dropbearkey
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/dropbear.config $(1)/etc/config/dropbear
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -118,7 +117,6 @@ define Package/dropbear/install
 	$(INSTALL_DIR) $(1)/usr/lib/opkg/info
 	$(INSTALL_DIR) $(1)/etc/dropbear
 	touch $(1)/etc/dropbear/dropbear_rsa_host_key
-	touch $(1)/etc/dropbear/dropbear_dss_host_key
 endef
 
 define Package/dropbearconvert/install

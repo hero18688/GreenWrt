@@ -1,4 +1,4 @@
-# 
+#
 # Copyright (C) 2006-2010 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
@@ -12,10 +12,13 @@ PKG_NAME:=kernel
 PKG_FLAGS:=hold
 
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
-SCAN_DEPS=modules/*.mk $(TOPDIR)/target/linux/*/modules.mk
+SCAN_DEPS=modules/*.mk $(TOPDIR)/target/linux/*/modules.mk $(TOPDIR)/include/netfilter.mk
 
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=
+
+export SHELL:=/bin/sh
+.ONESHELL:
 
 include $(INCLUDE_DIR)/package.mk
 
