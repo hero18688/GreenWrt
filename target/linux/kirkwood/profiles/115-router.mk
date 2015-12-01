@@ -5,18 +5,28 @@
 # See /LICENSE for more information.
 #
 
-define Profile/EA4500
-  NAME:=Linksys EA4500
+define Profile/AUDI
+  NAME:=Linksys EA3500 (Audi)
   PACKAGES:= \
 	kmod-mwl8k kmod-usb2 kmod-usb-storage \
-	uboot-envtools
+	swconfig wpad-mini
 endef
 
-define Profile/EA4500/Description
- Package set compatible with Linksys EA4500 board.
+define Profile/AUDI/Description
+ Package set compatible with Linksys EA3500 board.
 endef
 
-EA4500_UBIFS_OPTS:="-m 2048 -e 126KiB -c 4096"
-EA4500_UBI_OPTS:="-m 2048 -p 128KiB -s 512"
+$(eval $(call Profile,AUDI))
 
-$(eval $(call Profile,EA4500))
+define Profile/VIPER
+  NAME:=Linksys E4200v2 / EA4500 (Viper)
+  PACKAGES:= \
+	kmod-mwl8k kmod-usb2 kmod-usb-storage \
+	swconfig wpad-mini
+endef
+
+define Profile/VIPER/Description
+ Package set compatible with Linksys E4200v2 and EA4500 boards.
+endef
+
+$(eval $(call Profile,VIPER))

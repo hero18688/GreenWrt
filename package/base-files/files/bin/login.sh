@@ -1,8 +1,8 @@
 #!/bin/sh
 # Copyright (C) 2006-2011 OpenWrt.org
 
-if ( ! grep -qs '^root:[!x]\?:' /etc/shadow || \
-     ! grep -qs '^root:[!x]\?:' /etc/passwd ) && \
+if ( ! grep -qsE '^root:[!x]?:' /etc/shadow || \
+     ! grep -qsE '^root:[!x]?:' /etc/passwd ) && \
    [ -z "$FAILSAFE" ]
 then
 	echo "Login failed."
@@ -10,8 +10,7 @@ then
 else
 cat << EOF
  === IMPORTANT ============================
-  Use 'passwd' to set your login password
-  this will disable telnet and enable SSH
+  Use 'passwd' to set your login password!
  ------------------------------------------
 EOF
 fi

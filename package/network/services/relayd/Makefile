@@ -8,16 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=relayd
-PKG_VERSION:=2014-06-29
+PKG_VERSION:=2015-10-29
 PKG_RELEASE=$(PKG_SOURCE_VERSION)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=git://nbd.name/relayd.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=8b20ffae06b9b7fcc6fb52d3b8a80b45ed424e39
+PKG_SOURCE_VERSION:=83dba5d525a3b7c2ae4fcb24961143bfcfc93ba7
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@openwrt.org>
+PKG_LICENSE:=GPL-2.0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk

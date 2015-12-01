@@ -26,8 +26,10 @@ boot() {
 	mkdir -p /var/log
 	mkdir -p /var/lock
 	mkdir -p /var/state
+	mkdir -p /var/tmp
 	mkdir -p /tmp/.uci
 	chmod 0700 /tmp/.uci
+	mkdir -p /tmp/.jail
 	touch /var/log/wtmp
 	touch /var/log/lastlog
 	touch /tmp/resolv.conf.auto
@@ -38,7 +40,7 @@ boot() {
 	/sbin/kmodloader
 
 	# allow wifi modules time to settle
-	sleep 1
+	sleep 3
 
 	/sbin/wifi detect > /tmp/wireless.tmp
 	[ -s /tmp/wireless.tmp ] && {

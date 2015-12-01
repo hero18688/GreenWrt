@@ -28,7 +28,6 @@ menuconfig TARGET_OPTIONS
 	config USE_MIPS16
 		bool "Build packages with MIPS16 instructions" if TARGET_OPTIONS
 		depends on HAS_MIPS16
-		depends on !GCC_VERSION_4_6
 		default y
 		help
 		  If your target CPU does support the MIPS16 instruction set
@@ -59,6 +58,8 @@ menuconfig EXTERNAL_TOOLCHAIN
 		string
 		prompt "Target name"  if DEVEL
 		depends on EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN
+		default "aarch64-unknown-linux-gnu"  if aarch64
+		default "aarch64_be-unknown-linux-gnu"  if aarch64_be
 		default "arm-unknown-linux-gnu"      if arm
 		default "armeb-unknown-linux-gnu"    if armeb
 		default "i486-unknown-linux-gnu"     if i386
@@ -71,6 +72,8 @@ menuconfig EXTERNAL_TOOLCHAIN
 		string
 		prompt "Toolchain prefix"  if DEVEL
 		depends on EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN
+		default "aarch64-unknown-linux-gnu"  if aarch64
+		default "aarch64_be-unknown-linux-gnu"  if aarch64_be
 		default "arm-unknown-linux-gnu-"      if arm
 		default "armeb-unknown-linux-gnu-"    if armeb
 		default "i486-unknown-linux-gnu-"     if i386
@@ -83,6 +86,8 @@ menuconfig EXTERNAL_TOOLCHAIN
 		string
 		prompt "Toolchain root"  if DEVEL
 		depends on EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN
+		default "/opt/cross/aarch64-unknown-linux-gnu"  if aarch64
+		default "/opt/cross/aarch64_be-unknown-linux-gnu"  if aarch64_be
 		default "/opt/cross/arm-unknown-linux-gnu"      if arm
 		default "/opt/cross/armeb-unknown-linux-gnu"    if armeb
 		default "/opt/cross/i486-unknown-linux-gnu"     if i386
@@ -205,28 +210,31 @@ comment "C Library"
 
 choice
 	prompt "C Library implementation" if TOOLCHAINOPTS
-	default LIBC_USE_UCLIBC
+	default LIBC_USE_GLIBC if mips64 || mips64el
+	default LIBC_USE_UCLIBC if arc
+	default LIBC_USE_MUSL
 	help
 	  Select the C library implementation.
 
-	config LIBC_USE_EGLIBC
-		bool "Use eglibc"
-		select USE_EGLIBC
-		depends on !avr32
+	config LIBC_USE_GLIBC
+		bool "Use (e)glibc"
+		select USE_GLIBC
+		depends on !arc
 
 	config LIBC_USE_UCLIBC
 		select USE_UCLIBC
 		bool "Use uClibc"
+		depends on !(aarch64 || aarch64_be)
+		depends on BROKEN || !(arm || armeb || i386 || x86_64 || mips || mipsel || mips64 || mips64el || powerpc)
 
 	config LIBC_USE_MUSL
-		bool "Use musl"
 		select USE_MUSL
-		depends on BROKEN
-		depends on !(mips64 || mips64el)
+		bool "Use musl"
+		depends on !(arc || mips64 || mips64el)
 
 endchoice
 
-source "toolchain/eglibc/Config.in"
+source "toolchain/glibc/Config.in"
 source "toolchain/uClibc/Config.in"
 source "toolchain/musl/Config.in"
 
@@ -235,7 +243,7 @@ comment "Debuggers"
 
 config GDB
 	bool
-	depends on !avr32
+	depends on !(aarch64 || aarch64_be)
 	prompt "Build gdb" if TOOLCHAINOPTS
 	default y if !EXTERNAL_TOOLCHAIN
 	help
@@ -249,43 +257,44 @@ config INSIGHT
 	help
 	  Enable if you want to build insight-gdb.
 
-config USE_EGLIBC
+config USE_GLIBC
 	bool
-	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && octeon
 
 config USE_UCLIBC
+	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && (arc || mips64 || mips64el)
 	bool
-	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && !octeon
 
 config USE_MUSL
+	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && !(arc || mips64 || mips64el)
 	bool
 
 config USE_EXTERNAL_LIBC
 	bool
 	default y if EXTERNAL_TOOLCHAIN || NATIVE_TOOLCHAIN
 
+source "toolchain/binutils/Config.version"
 source "toolchain/gcc/Config.version"
 
-source "toolchain/eglibc/Config.version"
+source "toolchain/glibc/Config.version"
 source "toolchain/uClibc/Config.version"
 source "toolchain/musl/Config.version"
 
 config LIBC
 	string
-	default "eglibc"  if USE_EGLIBC
+	default "glibc"   if USE_GLIBC
 	default "uClibc"  if USE_UCLIBC
 	default "musl"	  if USE_MUSL
 
 config LIBC_VERSION
 	string
-	default EGLIBC_VERSION  if USE_EGLIBC
+	default GLIBC_VERSION   if USE_GLIBC
 	default UCLIBC_VERSION  if USE_UCLIBC
 	default MUSL_VERSION	if USE_MUSL
 
 config TARGET_SUFFIX
 	string
-	default "gnueabi"         if USE_EGLIBC && (arm || armeb)
-	default "gnu"             if USE_EGLIBC && !(arm || armeb)
+	default "gnueabi"         if USE_GLIBC && (arm || armeb)
+	default "gnu"             if USE_GLIBC && !(arm || armeb)
 	default "uclibcgnueabi"   if USE_UCLIBC && (arm || armeb)
 	default "uclibc"          if USE_UCLIBC && !(arm || armeb)
 	default "muslgnueabi"     if USE_MUSL && (arm || armeb)
