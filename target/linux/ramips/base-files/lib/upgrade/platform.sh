@@ -83,6 +83,8 @@ platform_check_image() {
 	nw718|\
 	oy-0001|\
 	pbr-m1|\
+	psg712|\
+	psg1208|\
 	psr-680w|\
 	px-4885|\
 	re6500|\

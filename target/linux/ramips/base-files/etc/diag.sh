@@ -140,6 +140,10 @@ get_status_led() {
 	zbt-wr8305rt)
 		status_led="$board:green:sys"
 		;;
+	psg712|\
+	psg1208)
+		status_led="phicomm:white:wps"
+		;;
 	psr-680w)
 		status_led="$board:red:wan"
 		;;

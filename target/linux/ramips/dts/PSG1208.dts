@@ -1,0 +1,31 @@
+/dts-v1/;
+
+/include/ "PSGXXXX.dtsi"
+
+/ {
+	compatible = "PSG1208", "ralink,mt7620a-soc";
+	model = "PHICOMM PSG1208";
+
+	ethernet@10100000 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&ephy_pins>;
+		mtd-mac-address = <&factory 0x4>;
+		ralink,port-map = "llllw";
+	};
+	
+	gpio-leds {
+		compatible = "gpio-leds";
+		wlan1 {
+			label = "phicomm:white:wifi";
+			gpios = <&gpio3 0 1>;
+		};
+		wlan2 {
+			label = "phicomm:white:wifi5g";
+			gpios = <&gpio1 0 1>;
+		};
+		wps {
+			label = "phicomm:white:wps";
+			gpios = <&gpio1 15 1>;
+		};
+	};
+};

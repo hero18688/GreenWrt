@@ -204,6 +204,13 @@ pbr-m1)
 	ucidef_set_led_default "power" "power" "$board:green:power" "1"
 	ucidef_set_led_default "sys" "sys" "$board:green:sys" "1"
 	;;
+psg712|\
+psg1208)
+	ucidef_set_led_default "power" "power" "phicomm:white:wps" "1"
+	set_usb_led "phicomm:white:usb"
+	set_wifi_led "phicomm:white:wifi"
+	ucidef_set_led_netdev "wifi5g" "wifi5g" "phicomm:white:wps" "rai0"
+	;;
 px-4885)
 	set_wifi_led "$board:orange:wifi"
 	set_usb_led "$board:blue:storage"
